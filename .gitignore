@@ -1,0 +1,7 @@
+
+.vscode/
+*.swp
+log/
+test/
+__pycache__/
+*.pyc

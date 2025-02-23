@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+	<name>prometheus</name>
+	<version>1.0.0</version>
+	<description>prometheus</description>
+
+	<maintainer email="bruk@signalbotics.com">Bruk Gebregziabher</maintainer>
+	<license>GPLv3</license>
+
+	<buildtool_depend>ament_cmake</buildtool_depend>
+
+	<exec_depend>ament_index_python</exec_depend>
+	<exec_depend>launch</exec_depend>
+	<exec_depend>launch_ros</exec_depend>
+	<exec_depend>robot_state_publisher</exec_depend>
+	<exec_depend>xacro</exec_depend>
+
+	<export>
+		<build_type>ament_cmake</build_type>
+	</export>
+</package>
