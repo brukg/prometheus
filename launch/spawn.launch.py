@@ -21,20 +21,24 @@ def generate_launch_description():
     stereo_camera_enabled = LaunchConfiguration("stereo_camera_enabled", default=True)
     two_d_lidar_enabled = LaunchConfiguration("two_d_lidar_enabled", default=True)
     odometry_source = LaunchConfiguration("odometry_source")
-
+    robot_desc = Command(
+        [
+            "xacro ",
+            join(prometheus_path, "models", "prometheus", "urdf", "prometheus.xacro"),
+            " camera_enabled:=", camera_enabled,
+            " stereo_camera_enabled:=", stereo_camera_enabled,
+            " two_d_lidar_enabled:=", two_d_lidar_enabled,
+            " odometry_source:=", odometry_source,
+            " sim_gz:=", "true"
+        ]
+    )
     robot_state_publisher = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         name="robot_state_publisher",
         parameters=[
-                    {'robot_description': Command( \
-                    ['xacro ', join(prometheus_path, 'models','prometheus','urdf', 'prometheus.xacro'),
-                    ' camera_enabled:=', camera_enabled,
-                    ' stereo_camera_enabled:=', stereo_camera_enabled,
-                    ' two_d_lidar_enabled:=', two_d_lidar_enabled,
-                    ' odometry_source:=', odometry_source,
-                    ' sim_gz:=', "true"
-                    ])}],
+                    {'robot_description': robot_desc}
+                    ],
         remappings=[
             ('/joint_states', 'prometheus/joint_states'),
         ]
@@ -111,5 +115,6 @@ def generate_launch_description():
         DeclareLaunchArgument("orientation_yaw", default_value="0.0"),
         DeclareLaunchArgument("odometry_source", default_value="world"),
         robot_state_publisher,
-        gz_spawn_entity, transform_publisher, gz_ros2_bridge
+        gz_spawn_entity, transform_publisher, 
+        gz_ros2_bridge
     ])

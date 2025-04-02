@@ -1,6 +1,6 @@
 # prometheus DiffDrive Robot
 
-<https://github.com/signalbotics/prometheus/assets/>
+<https://github.com/bruk/prometheus/assets/>
 
 ## About
 
@@ -112,4 +112,4 @@ ros2 launch prometheus nav2.launch.py
 
 this project is heavily based on the follwing repos
 - [BCR_BOT](https://github.com/blackcoffeerobotics/bcr_bot)
-- [SO-ARM-100](https://github.com/signalbotics/so-100-arm)
+- [SO-ARM-100](https://github.com/brukg/so-100-arm)
