@@ -20,11 +20,12 @@ def generate_launch_description():
             'use_sim_time': use_sim_time,
             'autostart': autostart,
             'map': os.path.join(pkg_prometheus, 'config', 'small_house.yaml'),
-            'params_file': os.path.join(pkg_prometheus, 'config', 'nav2_params.yaml'),
+            'params_file': os.path.join(pkg_prometheus, 'params', 'nav2_params.yaml'),
             'package_path': pkg_prometheus, 
         }.items()
     )
 
+    # output disable
     rviz_launch_cmd = Node(
         package="rviz2",
         executable="rviz2",
@@ -35,7 +36,8 @@ def generate_launch_description():
                 'rviz',
                 'nav2_default_view.rviz'
             )
-        ]
+        ],
+        output='log'
     )
 
     static_transform_publisher_node = Node(

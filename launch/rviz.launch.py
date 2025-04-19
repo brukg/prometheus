@@ -17,9 +17,10 @@ def generate_launch_description():
     # Launch configurations
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     isaac_sim = LaunchConfiguration('isaac_sim')
+    bringup_dir = get_package_share_directory('prometheus')
 
     # Process XACRO
-    xacro_path = os.path.join(get_package_share_directory('prometheus'), 'models','prometheus','urdf', 'prometheus.xacro')
+    xacro_path = os.path.join(bringup_dir, 'models','prometheus','urdf', 'prometheus.xacro')
     doc = get_xacro_to_doc(xacro_path, {"wheel_odom_topic": "odom"})
 
     # Nodes
@@ -37,7 +38,7 @@ def generate_launch_description():
         executable='rviz2',
         name='rviz2',
         output='screen',
-        arguments=['-d', os.path.join(get_package_share_directory('prometheus'), 'rviz', 'entire_setup.rviz')]
+        arguments=['-d', os.path.join(bringup_dir, 'rviz', 'entire_setup.rviz')]
     )
 
     return LaunchDescription([

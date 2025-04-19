@@ -34,7 +34,7 @@ from nav2_common.launch import ReplaceString, RewrittenYaml
 
 def generate_launch_description():
     # Get the launch directory
-    bringup_dir = get_package_share_directory('nav2_bringup')
+    bringup_dir = get_package_share_directory('prometheus')
     launch_dir = os.path.join(bringup_dir, 'launch')
 
     # Create the launch configuration variables
@@ -56,7 +56,13 @@ def generate_launch_description():
     # https://github.com/ros/robot_state_publisher/pull/30
     # TODO(orduno) Substitute with `PushNodeRemapping`
     #              https://github.com/ros2/launch_ros/issues/56
-    remappings = [('/tf', 'tf'), ('/tf_static', 'tf_static')]
+    remappings = [
+                ('/tf', 'tf'), 
+                ('/tf_static', 'tf_static'),
+                ('/scan', 'prometheus/scan'),
+                ('odom', 'prometheus/odom'),
+                ('cmd_vel', 'prometheus/cmd_vel'),
+                ]
 
     # Only it applys when `use_namespace` is True.
     # '<robot_namespace>' keyword shall be replaced by 'namespace' launch argument
@@ -107,7 +113,7 @@ def generate_launch_description():
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='false',
+        default_value='true',
         description='Use simulation (Gazebo) clock if true',
     )
 
@@ -125,7 +131,7 @@ def generate_launch_description():
 
     declare_use_composition_cmd = DeclareLaunchArgument(
         'use_composition',
-        default_value='True',
+        default_value='False',
         description='Whether to use composed bringup',
     )
 

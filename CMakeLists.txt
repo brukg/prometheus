@@ -8,6 +8,7 @@ install(
         config
         launch 
         models 
+        params
         rviz
         worlds 
     DESTINATION 
