@@ -7,9 +7,9 @@
   <gazebo>
     <plugin filename="libgz-sim-physics-system.so"
             name="gz::sim::systems::Physics">
-        <engine>
+        <!-- <engine>
             <filename>libgz-physics-ode-plugin.so</filename>
-        </engine>
+        </engine> -->
         <update_rate>1000</update_rate>
         <gravity>0 0 -9.8</gravity>
         <max_step_size>0.001</max_step_size>

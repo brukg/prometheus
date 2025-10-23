@@ -14,6 +14,8 @@ def generate_launch_description():
 
     prometheus_pkg = get_package_share_directory("prometheus")
     aws_small_house_pkg = get_package_share_directory("aws_robomaker_small_house_world")
+    husarion_gz_worlds_pkg = get_package_share_directory("husarion_gz_worlds")
+    # world_file = LaunchConfiguration("world_file", default = join(husarion_gz_worlds_pkg, "worlds", "husarion_world.sdf"))
     world_file = LaunchConfiguration("world_file", default = join(aws_small_house_pkg, "worlds", "small_house.world"))
     gz_sim_share = get_package_share_directory("ros_gz_sim")
 

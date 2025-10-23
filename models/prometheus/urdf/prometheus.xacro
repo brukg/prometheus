@@ -18,7 +18,7 @@
     <xacro:property name="trolley_wheel_friction" value="0.0"/>
     <xacro:property name="trolley_wheel_radius" value="0.03"/>
     <!-- a small constant -->
-    <xacro:property name="eps" value="0.002"/>
+    <xacro:property name="eps" value="0.0002"/>
 
     <xacro:property name="traction_wheel_radius" value="0.05"/>
     <xacro:property name="traction_wheel_width" value="0.03"/>
@@ -50,6 +50,7 @@
     <xacro:include filename="$(find prometheus)/models/prometheus/urdf/gz.xacro"/>
     <xacro:include filename="$(find prometheus)/models/prometheus/urdf/materials.xacro"/>
     <xacro:include filename="$(find prometheus)/models/prometheus/urdf/macros.xacro"/>
+    <!-- <xacro:include filename="$(find prometheus)/models/prometheus/urdf/mid360.xacro" /> -->
     <xacro:if value="$(arg arm_enabled)">
         <xacro:include filename="$(find prometheus)/models/so_100_arm_5dof/urdf/so_100_arm_5dof.urdf"/>
     </xacro:if>

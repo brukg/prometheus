@@ -12,6 +12,18 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='True')
     autostart = LaunchConfiguration('autostart', default='True')
 
+    gz_launch_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(pkg_prometheus, 'launch', 'gz.launch.py')
+        ),
+        launch_arguments={
+            'use_sim_time': use_sim_time,
+            'autostart': autostart,
+            'map': os.path.join(pkg_prometheus, 'config', 'small_house.yaml'),
+            'params_file': os.path.join(pkg_prometheus, 'params', 'nav2_params.yaml'),
+            'package_path': pkg_prometheus, 
+        }.items()
+    )
     nav2_launch_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_prometheus, 'launch', 'bringup_launch.py')
@@ -65,6 +77,7 @@ def generate_launch_description():
 
     # ld.add_action(set_initial_pose_node)
 
+    ld.add_action(gz_launch_cmd)
     ld.add_action(nav2_launch_cmd)
     ld.add_action(rviz_launch_cmd)
     

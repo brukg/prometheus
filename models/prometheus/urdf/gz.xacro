@@ -64,6 +64,12 @@
                             <min_angle>${radians(two_d_lidar_min_angle)}</min_angle>
                             <max_angle>${radians(two_d_lidar_max_angle)}</max_angle>
                         </horizontal>
+                        <!-- <vertical>
+                            <samples>360</samples>
+                            <resolution>1</resolution>
+                            <min_angle>${-7.22/180*3.1415926}</min_angle>
+                            <max_angle>${55.22/180*3.1415926}</max_angle>
+                        </vertical> -->
                     </scan>
                     <range>
                         <min>${two_d_lidar_min_range}</min>
@@ -112,7 +118,7 @@
     <gazebo reference="imu_frame">
         <sensor name="imu_sensor" type="imu">
             <always_on>1</always_on>
-            <update_rate>1</update_rate>
+            <update_rate>100</update_rate>
             <gz_frame_id>imu_frame</gz_frame_id>
             <visualize>true</visualize>
             <topic>imu</topic>
