@@ -4,15 +4,21 @@ project(prometheus)
 find_package(ament_cmake REQUIRED)
 
 install(
-    DIRECTORY 
+    DIRECTORY
         config
-        launch 
-        models 
+        launch
+        models
         params
         rviz
-        worlds 
-    DESTINATION 
+        worlds
+    DESTINATION
         share/${PROJECT_NAME}/
+)
+
+install(PROGRAMS
+    scripts/pink_ik_node.py
+    scripts/pink_ik_test_poses.py
+    DESTINATION lib/${PROJECT_NAME}
 )
 
 

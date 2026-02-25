@@ -7,8 +7,11 @@ Panels:
         - /Global Options1
         - /TF1/Frames1
         - /TF1/Tree1
-      Splitter Ratio: 0.5833333134651184
-    Tree Height: 853
+        - /Controller1
+        - /Realsense1
+        - /Realsense1/RealsenseCamera1
+      Splitter Ratio: 0.6438746452331543
+    Tree Height: 1539
   - Class: rviz_common/Selection
     Name: Selection
   - Class: rviz_common/Tool Properties
@@ -217,7 +220,7 @@ Visualization Manager:
       Position Transformer: XYZ
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.009999999776482582
+      Size (m): 1
       Style: Points
       Topic:
         Depth: 5
@@ -225,7 +228,7 @@ Visualization Manager:
         Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Best Effort
-        Value: /scan
+        Value: /prometheus/scan
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
@@ -288,7 +291,7 @@ Visualization Manager:
     - Alpha: 1
       Class: nav2_rviz_plugins/ParticleCloud
       Color: 0; 180; 0
-      Enabled: true
+      Enabled: false
       Max Arrow Length: 0.30000001192092896
       Min Arrow Length: 0.019999999552965164
       Name: Amcl Particle Swarm
@@ -300,16 +303,39 @@ Visualization Manager:
         History Policy: Keep Last
         Reliability Policy: Best Effort
         Value: /particle_cloud
-      Value: true
+      Value: false
     - Class: rviz_common/Group
       Displays:
-        - Alpha: 0.30000001192092896
+        - Alpha: 0.699999988079071
           Binary representation: false
           Binary threshold: 100
           Class: rviz_default_plugins/Map
           Color Scheme: costmap
           Draw Behind: false
           Enabled: true
+          Name: EDT
+          Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            Filter size: 10
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /global_costmap/edt_visualization
+          Update Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /global_costmap/edt_visualization_updates
+          Use Timestamp: false
+          Value: true
+        - Alpha: 0.30000001192092896
+          Binary representation: false
+          Binary threshold: 100
+          Class: rviz_default_plugins/Map
+          Color Scheme: costmap
+          Draw Behind: false
+          Enabled: false
           Name: Global Costmap
           Topic:
             Depth: 1
@@ -325,7 +351,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /global_costmap/costmap_updates
           Use Timestamp: false
-          Value: true
+          Value: false
         - Alpha: 0.30000001192092896
           Binary representation: false
           Binary threshold: 100
@@ -413,7 +439,7 @@ Visualization Manager:
         - Alpha: 1
           Class: rviz_default_plugins/Polygon
           Color: 25; 255; 0
-          Enabled: false
+          Enabled: true
           Name: Polygon
           Topic:
             Depth: 5
@@ -422,7 +448,7 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /global_costmap/published_footprint
-          Value: false
+          Value: true
       Enabled: true
       Name: Global Planner
     - Class: rviz_common/Group
@@ -454,7 +480,7 @@ Visualization Manager:
           Buffer Length: 1
           Class: rviz_default_plugins/Path
           Color: 0; 12; 255
-          Enabled: true
+          Enabled: false
           Head Diameter: 0.30000001192092896
           Head Length: 0.20000000298023224
           Length: 0.30000001192092896
@@ -477,7 +503,7 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /local_plan
-          Value: true
+          Value: false
         - Class: rviz_default_plugins/MarkerArray
           Enabled: false
           Name: Trajectories
@@ -493,7 +519,7 @@ Visualization Manager:
         - Alpha: 1
           Class: rviz_default_plugins/Polygon
           Color: 25; 255; 0
-          Enabled: true
+          Enabled: false
           Name: Polygon
           Topic:
             Depth: 5
@@ -502,7 +528,7 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /local_costmap/published_footprint
-          Value: true
+          Value: false
         - Alpha: 1
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
@@ -541,7 +567,7 @@ Visualization Manager:
     - Class: rviz_common/Group
       Displays:
         - Class: rviz_default_plugins/Image
-          Enabled: false
+          Enabled: true
           Max Value: 1
           Median window: 5
           Min Value: 0
@@ -553,7 +579,7 @@ Visualization Manager:
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /prometheus/stereo_camera/left/image_raw
-          Value: false
+          Value: true
         - Alpha: 1
           Autocompute Intensity Bounds: true
           Autocompute Value Bounds:
@@ -566,7 +592,7 @@ Visualization Manager:
           Color: 255; 255; 255
           Color Transformer: RGB8
           Decay Time: 0
-          Enabled: false
+          Enabled: true
           Invert Rainbow: false
           Max Color: 255; 255; 255
           Max Intensity: 4096
@@ -586,7 +612,7 @@ Visualization Manager:
             Value: /prometheus/kinect_camera/points
           Use Fixed Frame: true
           Use rainbow: true
-          Value: false
+          Value: true
       Enabled: true
       Name: Realsense
     - Class: rviz_default_plugins/MarkerArray
@@ -629,20 +655,84 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /pdwc_trajectory
       Value: true
-    - Class: rviz_default_plugins/Image
-      Enabled: false
-      Max Value: 1
-      Median window: 5
-      Min Value: 0
-      Name: Image
-      Normalize Range: true
+    - Angle Tolerance: 0.10000000149011612
+      Class: rviz_default_plugins/Odometry
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Keep: 100
+      Name: Odometry
+      Position Tolerance: 0.10000000149011612
+      Shape:
+        Alpha: 1
+        Axes Length: 1
+        Axes Radius: 0.10000000149011612
+        Color: 255; 25; 0
+        Head Length: 0.30000001192092896
+        Head Radius: 0.10000000149011612
+        Shaft Length: 1
+        Shaft Radius: 0.05000000074505806
+        Value: Arrow
       Topic:
         Depth: 5
         Durability Policy: Volatile
+        Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /prometheus/kinect_camera
-      Value: false
+        Value: /prometheus/predict_pose
+      Value: true
+    - Angle Tolerance: 0.10000000149011612
+      Class: rviz_default_plugins/Odometry
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Keep: 100
+      Name: Odometry
+      Position Tolerance: 0.10000000149011612
+      Shape:
+        Alpha: 1
+        Axes Length: 1
+        Axes Radius: 0.10000000149011612
+        Color: 255; 25; 0
+        Head Length: 0.30000001192092896
+        Head Radius: 0.10000000149011612
+        Shaft Length: 1
+        Shaft Radius: 0.05000000074505806
+        Value: Arrow
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /prometheus/update_pose
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -681,39 +771,37 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 7.184831142425537
+      Distance: 7.443275451660156
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.6511501669883728
-        Y: 0.9106356501579285
-        Z: 0.9150588512420654
+        X: 5.515679359436035
+        Y: -0.37483328580856323
+        Z: -0.16793730854988098
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.4597970247268677
+      Pitch: 1.0547964572906494
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz_default_plugins)
-      Yaw: 3.087381362915039
+      Yaw: 0.9723823070526123
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
   Docking:
     collapsed: false
-  Height: 1011
+  Height: 2262
   Hide Left Dock: false
   Hide Right Dock: false
-  Image:
-    collapsed: false
   Navigation 2:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000002a800000395fc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005d00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb000000100044006900730070006c006100790073010000003f00000395000000cc00fffffffc000001dc000001f80000000000fffffffa000000010100000003fb0000000a0049006d0061006700650000000000ffffffff0000005e00fffffffb0000000a0049006d0061006700650000000000ffffffff0000000000000000fb00000018004e0061007600690067006100740069006f006e002000320000000000000002a80000013a00fffffffb0000001e005200650061006c00730065006e0073006500430061006d0065007200610000000393000000410000001700ffffff000000010000013200000395fc0200000005fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003f000000d0000000a900fffffffb0000000e0044006f0063006b0069006e00670100000115000001b50000016200fffffffb0000001000530065006c006500630074006f007201000002d000000104000000d300fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004420000003efc0100000002fb0000000800540069006d00650100000000000004420000000000000000fb0000000800540069006d006501000000000000045000000000000000000000039a0000039500000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000028200000844fc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b000000ab00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fc000000690000069c000001ad01000034fa000000010100000002fb0000000a005600690065007700730100000000ffffffff0000014d00fffffffb000000100044006900730070006c006100790073010000000000000156000001da00fffffffc00000639000001010000000000fffffffa000000000100000002fb0000000a0049006d0061006700650100000000ffffffff0000000000000000fb0000000a0049006d0061006700650000000000ffffffff0000000000000000fb0000001e005200650061006c00730065006e0073006500430061006d00650072006101000007110000019c0000002100ffffff000000010000043500000844fc0200000004fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fc0000006900000701000002ef01000034fa000000000100000002fb00000018004e0061007600690067006100740069006f006e002000320100000000ffffffff0000022400fffffffb0000000e0044006f0063006b0069006e0067010000064e00000132000001f200fffffffb0000001000530065006c006500630074006f00720100000776000001370000013700fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004420000003efc0100000002fb0000000800540069006d00650100000000000004420000000000000000fb0000000800540069006d00650100000000000004500000000000000000000008310000084400000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   RealsenseCamera:
     collapsed: false
   Selection:
@@ -724,6 +812,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1920
+  Width: 3840
   X: 0
-  Y: 32
+  Y: 64

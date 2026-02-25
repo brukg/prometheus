@@ -98,6 +98,77 @@ To run Nav2 on prometheus:
 ros2 launch prometheus nav2.launch.py
 ```
 
+### Arm Inverse Kinematics with Pink-IK
+
+The SO-100 5-DOF arm can be controlled via task-space (Cartesian) goals using [Pink](https://github.com/stephane-caron/pink), a Python inverse kinematics library built on [Pinocchio](https://github.com/stack-of-tasks/pinocchio).
+
+#### Arm Controllers
+
+The arm uses `ros2_control` with the following controllers:
+
+| Controller | Type | Purpose |
+|---|---|---|
+| `joint_state_broadcaster` | JointStateBroadcaster | Publishes joint states |
+| `joint_trajectory_controller` | JointTrajectoryController | Position control for 5 arm joints |
+| `gripper_controller` | GripperActionController | Gripper open/close |
+
+Arm joints: `Shoulder_Rotation`, `Shoulder_Pitch`, `Elbow`, `Wrist_Pitch`, `Wrist_Roll`
+
+#### Dependencies
+
+```bash
+pip install pin-pink quadprog "numpy<2"
+```
+
+> **Note:** `numpy<2` is required because the ROS Jazzy system Pinocchio is compiled against NumPy 1.x. The `pin-pink` package pulls NumPy 2.x by default, which causes a crash.
+
+#### Running the IK Node
+
+First launch the simulation:
+
+```bash
+ros2 launch prometheus gz.launch.py
+```
+
+Then launch the Pink IK node (automatically loads and activates arm controllers):
+
+```bash
+ros2 launch prometheus pink_ik.launch.py
+```
+
+To also run the test pose publisher (cycles through 5 pre-defined poses):
+
+```bash
+ros2 launch prometheus pink_ik.launch.py run_tests:=true
+```
+
+#### Sending Target Poses
+
+Publish a `geometry_msgs/PoseStamped` to the `pink_ik/target_pose` topic. Poses are in the `base_footprint` frame:
+
+```bash
+ros2 topic pub --once pink_ik/target_pose geometry_msgs/msg/PoseStamped \
+  '{header: {frame_id: "base_footprint"}, pose: {position: {x: 0.15, y: 0.0, z: 0.2}, orientation: {w: 1.0}}}'
+```
+
+#### Topics and Actions
+
+| Topic / Action | Type | Direction |
+|---|---|---|
+| `pink_ik/target_pose` | `geometry_msgs/PoseStamped` | Subscribe - target EE pose |
+| `pink_ik/current_ee_pose` | `geometry_msgs/PoseStamped` | Publish - current FK pose at 10 Hz |
+| `pink_ik/status` | `std_msgs/String` | Publish - solver status (`idle`, `solving`, `executing`, `reached`, `failed`) |
+| `joint_trajectory_controller/follow_joint_trajectory` | `FollowJointTrajectory` | Action client - sends computed trajectories |
+
+#### Configuration
+
+IK parameters are in `config/pink_ik_params.yaml`. Key settings:
+
+- `position_cost` / `orientation_cost` - task weights (position prioritized since 5-DOF cannot achieve full 6-DOF poses)
+- `max_iterations` / `dt` - differential IK loop settings
+- `position_threshold` - convergence criterion (meters)
+- `trajectory_duration` / `num_waypoints` - trajectory execution timing
+
 ### Simulation and Visualization
 
 1. Gz Sim (small_house World):

@@ -1,0 +1,40 @@
+pink_ik_node:
+  ros__parameters:
+    # End-effector frame in the URDF
+    ee_frame: "Fixed_Gripper"
+
+    # Pink IK solver settings
+    position_cost: 1.0
+    orientation_cost: 0.1
+    posture_cost: 1.0e-4
+    lm_damping: 1.0e-3
+    solver: "quadprog"
+
+    # Convergence
+    max_iterations: 300
+    dt: 0.01
+    position_threshold: 0.005
+
+    # Trajectory execution
+    trajectory_duration: 3.0
+    num_waypoints: 20
+
+    # ROS interface
+    joint_states_topic: "prometheus/joint_states"
+    controller_action: "joint_trajectory_controller/follow_joint_trajectory"
+
+    # Arm joint names (must match URDF)
+    arm_joint_names:
+      - "Shoulder_Rotation"
+      - "Shoulder_Pitch"
+      - "Elbow"
+      - "Wrist_Pitch"
+      - "Wrist_Roll"
+
+    # Home configuration for posture regularization
+    home_positions:
+      - 0.0
+      - -1.7183
+      - 1.5447
+      - -0.3992
+      - 0.0
