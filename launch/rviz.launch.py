@@ -15,7 +15,7 @@ def get_xacro_to_doc(xacro_file_path, mappings):
 
 def generate_launch_description():
     # Launch configurations
-    use_sim_time = LaunchConfiguration('use_sim_time', default='false')
+    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     isaac_sim = LaunchConfiguration('isaac_sim')
     bringup_dir = get_package_share_directory('prometheus')
 
@@ -45,7 +45,7 @@ def generate_launch_description():
         # Declare arguments
         DeclareLaunchArgument(
             'use_sim_time',
-            default_value='false',
+            default_value='true',
             description='Use simulation time if true'
         ),
         DeclareLaunchArgument(

@@ -96,7 +96,7 @@ controller_server:
       stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
       xy_goal_tolerance: 0.25
-      yaw_goal_tolerance: 0.4
+      yaw_goal_tolerance: 0.2
     # FollowPath:
     #   plugin: "nav2_mppi_controller::MPPIController"
     #   time_steps: 56
@@ -234,20 +234,27 @@ controller_server:
     #   goal_tolerance: 0.5 
 
     FollowPath:
-      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+      plugin: "nav2_rotation_shim_controller::RotationShimController"
+      angular_dist_threshold: 0.785
+      forward_sampling_distance: 0.5
+      simulate_ahead_time: 1.0
+      rotate_to_goal_heading: true
+      rotate_to_heading_once: true
+      use_path_orientations: true
+      primary_controller: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
       max_linear_vel: 0.5
       min_linear_vel: -0.5
       max_angular_vel: 2.5
       min_angular_vel: -2.5
       max_linear_accel: 2.5
       max_linear_decel: -2.5
-      max_angular_accel: 3.2
-      max_angular_decel: -3.2
+      max_angular_accel: 1.2
+      max_angular_decel: -2.2
       lookahead_dist: 0.6
       min_lookahead_dist: 0.3
       max_lookahead_dist: 0.9
       lookahead_time: 1.5
-      rotate_to_heading_angular_vel: 1.8
+      rotate_to_heading_angular_vel: 0.3
       use_velocity_scaled_lookahead_dist: false
       min_approach_linear_velocity: 0.05
       approach_velocity_scaling_dist: 0.6
@@ -261,8 +268,8 @@ controller_server:
       cost_scaling_gain: 1.0
       regulated_linear_scaling_min_radius: 0.9
       regulated_linear_scaling_min_speed: 0.25
-      use_rotate_to_heading: true
-      allow_reversing: false
+      use_rotate_to_heading: false
+      allow_reversing: true
       rotate_to_heading_min_angle: 0.785
       min_distance_to_obstacle: 0.0
       stateful: true
@@ -388,7 +395,7 @@ planner_server:
       analytic_expansion_max_length: 3.0  # For Hybrid/Lattice nodes: The maximum length of the analytic expansion to be considered valid to prevent unsafe shortcutting
       analytic_expansion_max_cost: 200.0  # The maximum single cost for any part of an analytic expansion to contain and be valid, except when necessary on approach to goal
       analytic_expansion_max_cost_override: false  #  Whether or not to override the maximum cost setting if within critical distance to goal (ie probably required)
-      minimum_turning_radius: 0.10        # minimum turning radius in m of path / vehicle
+      minimum_turning_radius: 0.05        # minimum turning radius in m of path / vehicle
       reverse_penalty: 2.0                # Penalty to apply if motion is reversing, must be => 1
       change_penalty: 0.0                 # Penalty to apply if motion is changing directions (L to R), must be >= 0
       non_straight_penalty: 1.2           # Penalty to apply if motion is non-straight, must be => 1
@@ -401,7 +408,7 @@ planner_server:
       downsample_obstacle_heuristic: True
       allow_primitive_interpolation: False
       coarse_search_resolution: 4         # Number of bins to skip when doing a coarse search for the path. Only used for all_direction goal heading mode.
-      goal_heading_mode: "DEFAULT"        # DEFAULT, BIDIRECTIONAL, ALL_DIRECTION
+      goal_heading_mode: "ALL_DIRECTION"   # DEFAULT, BIDIRECTIONAL, ALL_DIRECTION
       smooth_path: True                   # If true, does a simple and quick smoothing post-processing to the path
 
 smoother_server:
@@ -470,7 +477,7 @@ collision_monitor:
     base_frame_id: "base_footprint"
     odom_frame_id: "odom"
     cmd_vel_in_topic: "cmd_vel_smoothed"
-    cmd_vel_out_topic: "cmd_vel"
+    cmd_vel_out_topic: "prometheus/cmd_vel"
     state_topic: "collision_monitor_state"
     transform_tolerance: 0.2
     source_timeout: 1.0

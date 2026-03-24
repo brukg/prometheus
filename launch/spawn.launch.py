@@ -62,7 +62,7 @@ def generate_launch_description():
         package="ros_gz_bridge",
         executable="parameter_bridge",
         arguments=[
-            "/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist",
+            "/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist",
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
             "/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry",
             "/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V",
