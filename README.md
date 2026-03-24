@@ -98,13 +98,13 @@ To run Nav2 on prometheus:
 ros2 launch prometheus nav2.launch.py
 ```
 
-### Arm Inverse Kinematics with Pink-IK
+### Arm Control Interface
 
-The SO-100 5-DOF arm can be controlled via task-space (Cartesian) goals using [Pink](https://github.com/stephane-caron/pink), a Python inverse kinematics library built on [Pinocchio](https://github.com/stack-of-tasks/pinocchio).
+The SO-100 5-DOF arm is controlled via a unified ROS2 interface using [Pink](https://github.com/stephane-caron/pink) (Pinocchio-based IK). The `pink_ik_node` exposes action servers and services for arm movement, state queries, and gripper control.
 
 #### Arm Controllers
 
-The arm uses `ros2_control` with the following controllers:
+The arm uses `ros2_control` with the following controllers (loaded automatically by the launch file):
 
 | Controller | Type | Purpose |
 |---|---|---|
@@ -122,52 +122,77 @@ pip install pin-pink quadprog "numpy<2"
 
 > **Note:** `numpy<2` is required because the ROS Jazzy system Pinocchio is compiled against NumPy 1.x. The `pin-pink` package pulls NumPy 2.x by default, which causes a crash.
 
-#### Running the IK Node
-
-First launch the simulation:
+#### Running
 
 ```bash
+# Terminal 1: Launch simulation
 ros2 launch prometheus gz.launch.py
-```
 
-Then launch the Pink IK node (automatically loads and activates arm controllers):
-
-```bash
+# Terminal 2: Launch arm control node (loads controllers automatically)
 ros2 launch prometheus pink_ik.launch.py
 ```
 
-To also run the test pose publisher (cycles through 5 pre-defined poses):
+#### ROS2 Interface
 
-```bash
-ros2 launch prometheus pink_ik.launch.py run_tests:=true
-```
+##### Action: `arm/move_to_pose` (`prometheus/action/MoveArm`)
 
-#### Sending Target Poses
+Unified arm movement with 5 modes:
 
-Publish a `geometry_msgs/PoseStamped` to the `pink_ik/target_pose` topic. Poses are in the `base_footprint` frame:
-
-```bash
-ros2 topic pub --once pink_ik/target_pose geometry_msgs/msg/PoseStamped \
-  '{header: {frame_id: "base_footprint"}, pose: {position: {x: 0.15, y: 0.0, z: 0.2}, orientation: {w: 1.0}}}'
-```
-
-#### Topics and Actions
-
-| Topic / Action | Type | Direction |
+| Mode | Description | Required Fields |
 |---|---|---|
-| `pink_ik/target_pose` | `geometry_msgs/PoseStamped` | Subscribe - target EE pose |
-| `pink_ik/current_ee_pose` | `geometry_msgs/PoseStamped` | Publish - current FK pose at 10 Hz |
-| `pink_ik/status` | `std_msgs/String` | Publish - solver status (`idle`, `solving`, `executing`, `reached`, `failed`) |
-| `joint_trajectory_controller/follow_joint_trajectory` | `FollowJointTrajectory` | Action client - sends computed trajectories |
+| `cartesian` | Move EE to absolute Cartesian pose | `target_pose` |
+| `relative` | Move EE by offset from current position | `offset` (dx, dy, dz) |
+| `named` | Move to a named joint configuration | `pose_name` (`home`, `ready`, `tucked`) |
+| `home` | Return to home position | none |
+| `joints` | Move to direct joint angles | `joint_positions` (5 floats, radians) |
+
+Feedback provides `progress` (0-1), `position_error` (meters), and `phase` (`solving`/`executing`).
+
+Example:
+
+```bash
+# Cartesian goal
+ros2 action send_goal /arm/move_to_pose prometheus/action/MoveArm \
+  "{mode: 'cartesian', target_pose: {header: {frame_id: 'base_footprint'}, pose: {position: {x: 0.3, y: 0.0, z: 0.3}, orientation: {w: 1.0}}}}"
+
+# Relative move (10cm down)
+ros2 action send_goal /arm/move_to_pose prometheus/action/MoveArm \
+  "{mode: 'relative', offset: {z: -0.1}}"
+
+# Named pose
+ros2 action send_goal /arm/move_to_pose prometheus/action/MoveArm \
+  "{mode: 'named', pose_name: 'home'}"
+
+# Home
+ros2 action send_goal /arm/move_to_pose prometheus/action/MoveArm "{mode: 'home'}"
+```
+
+##### Gripper: `gripper_controller/gripper_cmd` (`control_msgs/action/GripperCommand`)
+
+Standard ROS2 gripper action. Position 0.0 (closed) to 1.57 (open).
+
+```bash
+ros2 action send_goal /gripper_controller/gripper_cmd control_msgs/action/GripperCommand \
+  "{command: {position: 0.0, max_effort: 100.0}}"
+```
+
+##### Topics
+
+| Topic | Type | Description |
+|---|---|---|
+| `pink_ik/current_ee_pose` | `geometry_msgs/PoseStamped` | Current FK end-effector pose at 10 Hz |
+| `pink_ik/status` | `std_msgs/String` | Solver status: `idle`, `solving`, `executing`, `reached`, `failed` |
+| `prometheus/joint_states` | `sensor_msgs/JointState` | All joint positions (arm + gripper) |
 
 #### Configuration
 
-IK parameters are in `config/pink_ik_params.yaml`. Key settings:
+IK parameters are in `config/pink_ik_params.yaml`:
 
-- `position_cost` / `orientation_cost` - task weights (position prioritized since 5-DOF cannot achieve full 6-DOF poses)
-- `max_iterations` / `dt` - differential IK loop settings
-- `position_threshold` - convergence criterion (meters)
-- `trajectory_duration` / `num_waypoints` - trajectory execution timing
+- `position_cost` / `orientation_cost` — task weights (position prioritized for 5-DOF arm)
+- `max_iterations` / `dt` — differential IK loop settings
+- `position_threshold` — convergence criterion (meters)
+- `trajectory_duration` / `num_waypoints` — trajectory execution timing
+- `named_poses` — dict of named joint configurations (home, ready, tucked)
 
 ### Simulation and Visualization
 

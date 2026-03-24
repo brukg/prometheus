@@ -30,6 +30,11 @@ def generate_launch_description():
         output="screen",
     )
 
+    load_gripper = ExecuteProcess(
+        cmd=["ros2", "control", "load_controller", "gripper_controller", "--set-state", "active"],
+        output="screen",
+    )
+
     pink_ik_node = Node(
         package="prometheus",
         executable="pink_ik_node.py",
@@ -50,7 +55,7 @@ def generate_launch_description():
         condition=IfCondition(run_tests),
     )
 
-    # Chain: load_jsb -> load_jtc -> pink_ik_node
+    # Chain: load_jsb -> load_jtc -> load_gripper -> pink_ik_node
     return LaunchDescription(
         [
             DeclareLaunchArgument("use_sim_time", default_value="true"),
@@ -65,6 +70,12 @@ def generate_launch_description():
             RegisterEventHandler(
                 OnProcessExit(
                     target_action=load_jtc,
+                    on_exit=[load_gripper],
+                ),
+            ),
+            RegisterEventHandler(
+                OnProcessExit(
+                    target_action=load_gripper,
                     on_exit=[pink_ik_node, test_poses_node],
                 ),
             ),

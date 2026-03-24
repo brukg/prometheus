@@ -14,12 +14,12 @@ from geometry_msgs.msg import PoseStamped
 TEST_POSES = [
     {
         "name": "Forward reach",
-        "position": [0.15, 0.0, 0.15],
+        "position": [0.3, 0.0, 0.3],
         "orientation": [0.0, 0.0, 0.0, 1.0],  # x, y, z, w
     },
     {
         "name": "Left reach",
-        "position": [0.1, 0.12, 0.15],
+        "position": [0.1, 0.12, 0.3],
         "orientation": [0.0, 0.0, 0.0, 1.0],
     },
     {
@@ -34,7 +34,7 @@ TEST_POSES = [
     },
     {
         "name": "Right reach",
-        "position": [0.1, -0.12, 0.15],
+        "position": [0.1, -0.12, 0.3],
         "orientation": [0.0, 0.0, 0.0, 1.0],
     },
 ]

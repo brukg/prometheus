@@ -37,6 +37,7 @@ def generate_launch_description():
         }.items()
     )
 
+
     # output disable
     rviz_launch_cmd = Node(
         package="rviz2",

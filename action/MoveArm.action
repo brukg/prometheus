@@ -1,0 +1,18 @@
+# Goal - Unified arm movement with multiple modes
+string mode                              # "cartesian" | "relative" | "named" | "home" | "joints"
+geometry_msgs/PoseStamped target_pose    # for "cartesian": target EE pose in base frame
+geometry_msgs/Vector3 offset             # for "relative": delta from current EE position
+string pose_name                         # for "named": e.g. "home", "ready", "tucked"
+float64[] joint_positions                # for "joints": direct joint angles (radians)
+float64 duration                         # trajectory time in seconds (0 = use default)
+---
+# Result
+bool success
+string message
+geometry_msgs/PoseStamped final_pose
+float64[] final_joint_positions
+---
+# Feedback
+float64 progress                         # 0.0 to 1.0
+float64 position_error                   # meters remaining to target
+string phase                             # "solving" | "executing"
