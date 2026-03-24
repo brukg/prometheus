@@ -53,11 +53,7 @@ def generate_launch_description():
     # TODO(orduno) Substitute with `PushNodeRemapping`
     #              https://github.com/ros2/launch_ros/issues/56
     remappings = [
-                ('/tf', 'tf'), 
-                ('/tf_static', 'tf_static'),
-                ('/scan', 'prometheus/scan'),
-                ('odom', 'prometheus/odom'),
-                ('cmd_vel', 'prometheus/cmd_vel'),
+                ('initialpose', '/initialpose'),
                 ]
 
     configured_params = ParameterFile(

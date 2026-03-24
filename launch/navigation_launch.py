@@ -59,10 +59,9 @@ def generate_launch_description():
     # TODO(orduno) Substitute with `PushNodeRemapping`
     #              https://github.com/ros2/launch_ros/issues/56
     remappings = [
-                ('/tf', 'tf'),
-                ('/tf_static', 'tf_static'),
-                ('/scan', 'prometheus/scan'),
-                ('odom', 'prometheus/odom'),
+                ('goal_pose', '/goal_pose'),
+                ('navigate_to_pose', '/navigate_to_pose'),
+                ('navigate_through_poses', '/navigate_through_poses'),
                 ]
 
     # Create our own temporary YAML files that include substitutions

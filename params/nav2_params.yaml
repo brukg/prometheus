@@ -36,7 +36,7 @@ amcl:
     z_max: 0.05
     z_rand: 0.5
     z_short: 0.05
-    scan_topic: /prometheus/scan
+    scan_topic: scan
     
 
 bt_navigator:
@@ -44,7 +44,7 @@ bt_navigator:
     use_sim_time: True
     global_frame: map
     robot_base_frame: base_link
-    odom_topic: /prometheus/odom
+    odom_topic: odom
     bt_loop_duration: 10
     default_server_timeout: 20
     wait_for_service_timeout: 1000
@@ -304,7 +304,7 @@ local_costmap:
         mark_threshold: 0
         observation_sources: scan
         scan:
-          topic: /prometheus/scan
+          topic: scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -336,7 +336,7 @@ global_costmap:
         enabled: True
         observation_sources: scan
         scan:
-          topic: /prometheus/scan
+          topic: scan
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -477,7 +477,7 @@ collision_monitor:
     base_frame_id: "base_footprint"
     odom_frame_id: "odom"
     cmd_vel_in_topic: "cmd_vel_smoothed"
-    cmd_vel_out_topic: "prometheus/cmd_vel"
+    cmd_vel_out_topic: "cmd_vel"
     state_topic: "collision_monitor_state"
     transform_tolerance: 0.2
     source_timeout: 1.0
@@ -489,7 +489,7 @@ collision_monitor:
     FootprintApproach:
       type: "polygon"
       action_type: "approach"
-      footprint_topic: "/local_costmap/published_footprint"
+      footprint_topic: "local_costmap/published_footprint"
       time_before_collision: 1.2
       simulation_time_step: 0.1
       min_points: 6
@@ -498,7 +498,7 @@ collision_monitor:
     observation_sources: ["scan"]
     scan:
       type: "scan"
-      topic: "/prometheus/scan"
+      topic: "scan"
       min_height: 0.15
       max_height: 2.0
       enabled: True

@@ -11,6 +11,7 @@ def generate_launch_description():
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='True')
     autostart = LaunchConfiguration('autostart', default='True')
+    namespace = LaunchConfiguration('namespace', default='prometheus')
 
     gz_launch_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -19,9 +20,10 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': use_sim_time,
             'autostart': autostart,
+            'namespace': namespace,
             'map': os.path.join(pkg_prometheus, 'config', 'small_house.yaml'),
             'params_file': os.path.join(pkg_prometheus, 'params', 'nav2_params.yaml'),
-            'package_path': pkg_prometheus, 
+            'package_path': pkg_prometheus,
         }.items()
     )
     nav2_launch_cmd = IncludeLaunchDescription(
@@ -31,9 +33,11 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': use_sim_time,
             'autostart': autostart,
+            'namespace': namespace,
+            'use_namespace': 'true',
             'map': os.path.join(pkg_prometheus, 'config', 'small_house.yaml'),
             'params_file': os.path.join(pkg_prometheus, 'params', 'nav2_params.yaml'),
-            'package_path': pkg_prometheus, 
+            'package_path': pkg_prometheus,
         }.items()
     )
 

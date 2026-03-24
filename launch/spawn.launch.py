@@ -12,7 +12,7 @@ from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-   
+
     prometheus_path = get_package_share_directory("prometheus")
     position_x = LaunchConfiguration("position_x")
     position_y = LaunchConfiguration("position_y")
@@ -21,6 +21,7 @@ def generate_launch_description():
     stereo_camera_enabled = LaunchConfiguration("stereo_camera_enabled", default=True)
     two_d_lidar_enabled = LaunchConfiguration("two_d_lidar_enabled", default=True)
     odometry_source = LaunchConfiguration("odometry_source")
+    ns = LaunchConfiguration("namespace")
     robot_desc = Command(
         [
             "xacro ",
@@ -36,11 +37,12 @@ def generate_launch_description():
         package="robot_state_publisher",
         executable="robot_state_publisher",
         name="robot_state_publisher",
+        namespace=ns,
         parameters=[
                     {'robot_description': robot_desc}
                     ],
         remappings=[
-            ('/joint_states', 'prometheus/joint_states'),
+            ('robot_description', '/robot_description'),
         ]
     )
 
@@ -61,6 +63,7 @@ def generate_launch_description():
     gz_ros2_bridge = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
+        namespace=ns,
         arguments=[
             "/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist",
             "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock",
@@ -79,19 +82,18 @@ def generate_launch_description():
             "/world/default/model/prometheus/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model"
         ],
         remappings=[
-            ('/world/default/model/prometheus/joint_state', 'prometheus/joint_states'),
-            ('/odom', 'prometheus/odom'),
-            ('/scan', 'prometheus/scan'),
-            ('/scan/points', 'prometheus/scan/points'),
-            # ('/kinect_camera', 'prometheus/kinect_camera'),
-            ('/stereo_camera/left/image_raw', 'prometheus/stereo_camera/left/image_raw'),
-            ('/stereo_camera/right/image_raw', 'prometheus/stereo_camera/right/image_raw'),
-            ('/imu', 'prometheus/imu'),
-            ('/cmd_vel', 'prometheus/cmd_vel'),
-            # ('kinect_camera/camera_info', 'prometheus/kinect_camera/camera_info'),
-            ('stereo_camera/left/camera_info', 'prometheus/stereo_camera/left/camera_info'),
-            ('stereo_camera/right/camera_info', 'prometheus/stereo_camera/right/camera_info'),
-            # ('/kinect_camera/points', 'prometheus/kinect_camera/points'),
+            ('/world/default/model/prometheus/joint_state', 'joint_states'),
+            ('/odom', 'odom'),
+            ('/scan', 'scan'),
+            ('/scan/points', 'scan/points'),
+            ('/stereo_camera/left/image_raw', 'stereo_camera/left/image_raw'),
+            ('/stereo_camera/right/image_raw', 'stereo_camera/right/image_raw'),
+            ('/imu', 'imu'),
+            ('/cmd_vel', 'cmd_vel'),
+            ('stereo_camera/left/camera_info', 'stereo_camera/left/camera_info'),
+            ('stereo_camera/right/camera_info', 'stereo_camera/right/camera_info'),
+            ('/clock', '/clock'),
+            ('/tf', '/tf'),
         ]
     )
 
@@ -116,7 +118,8 @@ def generate_launch_description():
         DeclareLaunchArgument("position_y", default_value="0.0"),
         DeclareLaunchArgument("orientation_yaw", default_value="0.0"),
         DeclareLaunchArgument("odometry_source", default_value="world"),
+        DeclareLaunchArgument("namespace", default_value="prometheus"),
         robot_state_publisher,
-        gz_spawn_entity, transform_publisher, 
+        gz_spawn_entity, transform_publisher,
         gz_ros2_bridge
     ])
